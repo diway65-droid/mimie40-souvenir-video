@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Un mot pour Mimie · 40 ans</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #f8f6f0;
+    --panel: #ffffff;
+    --panel-sub: #fbf9f5;
+    --accent: #d97762;
+    --accent-dark: #b85b47;
+    --rose-soft: #f4cdd2;
+    --gold-soft: #fae4b5;
+    --sage-soft: #d3e7df;
+    --ink: #2f2526;
+    --ink-light: #6a5e5f;
+    --border: rgba(184, 91, 71, 0.16);
+    --radius: 20px;
+  }
+
+  *{ box-sizing: border-box; }
+  html, body{
+    margin: 0; padding: 0; background-color: var(--bg);
+    background-image:
+      radial-gradient(900px 500px at 10% 0%, rgba(250,228,181,0.4), transparent 50%),
+      radial-gradient(800px 600px at 90% 10%, rgba(244,205,210,0.35), transparent 45%);
+    color: var(--ink); font-family: 'Work Sans', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3{ font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--ink); margin: 0 0 10px; }
+  button, input{ font-family: inherit; }
+  a{ color: inherit; text-decoration: none; }
+  .hidden{ display: none !important; }
+
+  #app{ max-width: 620px; margin: 0 auto; padding: 24px 16px 60px; }
+  .sprockets{
+    height: 12px;
+    background-image: repeating-linear-gradient(90deg, var(--accent) 0 8px, transparent 8px 18px);
+    opacity: 0.25; border-radius: 6px; margin-bottom: 20px;
+  }
+
+  .panel{
+    background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 28px 22px;
+    box-shadow: 0 6px 20px rgba(184, 91, 71, 0.05), 3px 3px 0 rgba(217, 119, 98, 0.12);
+    position: relative; margin-bottom: 20px;
+  }
+
+  .hero-panel{ overflow: visible; padding-top: 36px; }
+  .deco-flower{ position: absolute; width: 60px; pointer-events: none; z-index: 0; }
+  .deco-flower .petal{ fill: var(--rose-soft); }
+  .deco-flower .center{ fill: var(--gold-soft); }
+  .deco-flower .stem{ stroke: var(--accent); stroke-width: 1.6; fill: none; opacity: 0.7; }
+  .deco-flower.tl{ top: -16px; left: -14px; transform: rotate(-20deg); }
+  .deco-flower.tr{ top: -20px; right: -12px; width: 54px; transform: rotate(20deg) scaleX(-1); }
+
+  .hero-content{ position: relative; z-index: 1; }
+  .hero-num{
+    font-family: 'Fraunces', Georgia, serif; font-weight: 900;
+    font-size: clamp(80px, 28vw, 130px); line-height: 0.85; color: var(--accent); margin-bottom: 6px;
+  }
+  .hero-title{ font-size: clamp(24px, 5.5vw, 30px); }
+  .hero-sub{ font-size: 15.5px; line-height: 1.55; color: var(--ink-light); margin: 0 0 20px; }
+
+  .steps{ list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  .steps li{ display: flex; gap: 12px; align-items: flex-start; }
+  .step-num{
+    flex: none; width: 26px; height: 26px; border-radius: 50%;
+    background: #fdf3f0; border: 1px solid var(--accent); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; font-family: 'Fraunces', serif;
+  }
+  .steps p{ margin: 0; font-size: 14.5px; color: var(--ink-light); line-height: 1.45; }
+  .steps strong{ color: var(--ink); }
+
+  .btn{
+    appearance: none; border: none; cursor: pointer; border-radius: 999px; padding: 13px 22px;
+    font-size: 15px; font-weight: 600; display: inline-flex; align-items: center;
+    justify-content: center; gap: 8px; transition: transform .15s ease;
+  }
+  .btn:active{ transform: scale(0.97); }
+  .btn-primary{ background: var(--accent); color: #fff; box-shadow: 0 3px 0 var(--accent-dark); }
+  .btn-ghost{ background: #ffffff; color: var(--ink); border: 1px solid var(--border); }
+  .btn-ghost:hover{ border-color: var(--accent); color: var(--accent); }
+  .btn-block{ width: 100%; }
+  .btn-row{ display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn[disabled]{ opacity: 0.4; cursor: not-allowed; }
+  .link-small{ background: none; border: none; color: var(--accent); font-size: 13px; text-decoration: underline; cursor: pointer; padding: 0; font-weight: 600; }
+
+  .choice-grid{ display: grid; gap: 12px; margin-top: 14px; }
+  .choice-card{
+    text-align: left; width: 100%; cursor: pointer; border: 1px solid var(--border);
+    background: #fff; border-radius: 16px; padding: 18px;
+    display: flex; align-items: center; gap: 14px; color: var(--ink);
+  }
+  .choice-card:hover{ border-color: var(--accent); background: #fffcfb; }
+  .choice-icon{
+    flex: none; width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: #fdf1ee; font-size: 20px;
+  }
+  .choice-card h3{ margin: 0 0 3px; font-size: 17px; color: var(--accent); }
+  .choice-card p{ margin: 0; font-size: 13.5px; color: var(--ink-light); }
+
+  .choice-summary{
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: #fff; border: 1px solid var(--border); border-radius: 12px;
+    padding: 12px 16px; margin-top: 14px; font-size: 14px; font-weight: 500;
+  }
+
+  /* Roulette légèrement réduite pour donner plus de place aux boutons */
+  .wheel-wrap{ display: flex; flex-direction: column; align-items: center; margin: 6px 0 14px; }
+  .pointer{
+    width: 0; height: 0; margin-bottom: -2px; z-index: 2;
+    border-left: 9px solid transparent; border-right: 9px solid transparent;
+    border-top: 14px solid var(--accent);
+  }
+  .wheel{
+    width: 190px; height: 190px; border-radius: 50%; border: 4px solid #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 3.2s cubic-bezier(.17,.67,.2,1);
+    background: conic-gradient(
+      var(--gold-soft) 0deg 40deg, var(--rose-soft) 40deg 80deg, var(--sage-soft) 80deg 120deg,
+      var(--gold-soft) 120deg 160deg, var(--rose-soft) 160deg 200deg, var(--sage-soft) 200deg 240deg,
+      var(--gold-soft) 240deg 280deg, var(--rose-soft) 280deg 320deg, var(--sage-soft) 320deg 360deg
+    );
+    position: relative;
+  }
+  .wheel::after{
+    content: "🎉"; position: absolute; inset: 0; margin: auto; width: 38px; height: 38px;
+    background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .question-card{
+    margin-top: 14px; padding: 16px; border-radius: 14px;
+    background: var(--panel-sub); border: 1px dashed var(--accent);
+    text-align: center; min-height: 65px; display: flex; align-items: center; justify-content: center;
+  }
+  .question-card p{ margin: 0; font-size: 16.5px; font-family: 'Fraunces', serif; font-weight: 600; }
+  .question-card .placeholder{ font-family: inherit; font-size: 14px; color: var(--ink-light); }
+
+  /* Enregistrement vidéo */
+  .cam-frame{
+    position: relative; width: 100%; aspect-ratio: 3/4; border-radius: 16px; overflow: hidden;
+    background: #222; border: 1px solid var(--border); margin: 14px 0;
+  }
+  video, canvas{ width: 100%; height: 100%; object-fit: cover; display: block; }
+  
+  #liveVideo{ position: absolute; inset: 0; transform: scaleX(-1); }
+  #stageCanvas{ position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+  #playback{ position: absolute; inset: 0; background: #000; display: none; }
+
+  .rec-badge{
+    position: absolute; top: 12px; left: 12px; z-index: 3;
+    background: rgba(255,255,255,0.9); padding: 5px 10px; border-radius: 999px;
+    font-size: 12px; font-weight: 600; display: none; align-items: center; gap: 6px;
+  }
+  .rec-badge.show{ display: flex; }
+  .rec-dot{ width: 8px; height: 8px; border-radius: 50%; background: #e14b4b; }
+
+  .cam-overlay-note{
+    position: absolute; inset: auto 10px 10px 10px; z-index: 3;
+    background: rgba(255,255,255,0.9); backdrop-filter: blur(4px);
+    border: 1px solid rgba(217,119,98,0.3); border-radius: 10px;
+    padding: 8px 12px; font-size: 12px; line-height: 1.4;
+  }
+  .cam-overlay-note b{ color: var(--accent); display: block; margin-bottom: 2px; }
+  .cam-msg{ text-align: center; padding: 30px 16px; color: #fff; font-size: 13.5px; line-height: 1.5; }
+  .timer{ text-align: center; font-variant-numeric: tabular-nums; font-size: 14px; margin-bottom: 10px; color: var(--ink-light); }
+
+  /* Bloc Saisie Auteur */
+  .author-card{
+    background: var(--panel-sub); border: 1px solid var(--border); border-radius: 14px;
+    padding: 16px; margin: 16px 0; text-align: left;
+  }
+  .author-card label{ display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; color: var(--ink); }
+  .author-input{
+    width: 100%; border: 1.5px solid var(--border); border-radius: 10px;
+    padding: 10px 14px; font-size: 15px; outline: none; background: #fff; color: var(--ink);
+  }
+  .author-input:focus{ border-color: var(--accent); }
+  .author-help{ font-size: 12px; color: var(--accent-dark); margin-top: 4px; display: block; }
+
+  .note-box{
+    background: var(--panel-sub); border: 1px solid rgba(217,119,98,0.25);
+    border-radius: 12px; padding: 14px; font-size: 13px; line-height: 1.5;
+    color: var(--ink-light); margin-top: 16px;
+  }
+  footer.credit{ text-align: center; margin-top: 12px; font-size: 12px; color: var(--ink-light); }
+
+  .upload-progress-wrap{ margin: 16px 0; }
+  .upload-progress-bar{
+    width: 100%; height: 10px; border-radius: 999px; background: #f0e9e5;
+    overflow: hidden; border: 1px solid var(--border);
+  }
+  .upload-progress-fill{
+    height: 100%; width: 0%; background: var(--accent);
+    transition: width .25s ease; border-radius: 999px;
+  }
+  .upload-progress-text{
+    text-align: center; margin-top: 8px; font-size: 13px; color: var(--ink-light);
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="sprockets"></div>
+
+  <main>
+    <!-- HERO -->
+    <section class="panel hero-panel" id="sec-hero">
+      <svg class="deco-flower tl" viewBox="0 0 60 100"><g class="stem"><path d="M30 98 C26 78 34 60 28 42"/><path d="M28 70 C18 66 12 56 20 50"/></g><g transform="translate(30,26)"><g class="petal"><ellipse cx="0" cy="-10" rx="6" ry="11"/><ellipse cx="0" cy="-10" rx="6" ry="11" transform="rotate(60)"/><ellipse cx="0" cy="-10" rx="6" ry="11" transform="rotate(120)"/><ellipse cx="0" cy="-10" rx="6" ry="11" transform="rotate(180)"/><ellipse cx="0" cy="-10" rx="6" ry="11" transform="rotate(240)"/><ellipse cx="0" cy="-10" rx="6" ry="11" transform="rotate(300)"/></g><circle r="5" class="center"/></g></svg>
+      <svg class="deco-flower tr" viewBox="0 0 60 100"><g class="stem"><path d="M30 98 C26 78 34 60 28 42"/><path d="M30 55 C40 50 46 40 40 32"/></g><g transform="translate(30,26)"><g class="petal"><ellipse cx="0" cy="-10" rx="6" ry="11"/><ellipse cx="0" cy="-10" rx="6" ry="11" transform="rotate(60)"/><ellipse cx="0" cy="-10" rx="6" ry="11" transform="rotate(120)"/><ellipse cx="0" cy="-10" rx="6" ry="11" transform="rotate(180)"/><ellipse cx="0" cy="-10" rx="6" ry="11" transform="rotate(240)"/><ellipse cx="0" cy="-10" rx="6" ry="11" transform="rotate(300)"/></g><circle r="5" class="center"/></g></svg>
+
+      <div class="hero-content">
+        <div class="hero-num">40</div>
+        <h1 class="hero-title">Un mot pour Mimie Doudou 🎂</h1>
+        <p class="hero-sub">Le soir de son anniversaire, on lui offrira une vidéo souvenir avec les petits mots de ses proches. Deux minutes de ton temps, et un souvenir pour toute la vie.</p>
+
+        <ul class="steps">
+          <li><span class="step-num">1</span><p><strong>Choisis ton style</strong> — message libre ou roulette de questions.</p></li>
+          <li><span class="step-num">2</span><p><strong>Filme-toi</strong> — quelques secondes suffisent amplement (40s max) !</p></li>
+          <li><span class="step-num">3</span><p><strong>Envoie ta vidéo</strong> — elle partira dans l'album souvenir.</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CHOIX -->
+    <section class="panel" id="sec-choice">
+      <h2>Comment veux-tu t'exprimer ?</h2>
+      <p class="hero-sub" style="margin-bottom:0;">Les deux options rejoindront le même album souvenir.</p>
+
+      <div class="choice-grid" id="choiceCards">
+        <button class="choice-card" id="btnFree" type="button">
+          <span class="choice-icon">💌</span>
+          <span><h3>Message libre</h3><p>Dis ce que tu veux : un souvenir, une blague ou un mot doux.</p></span>
+        </button>
+        <button class="choice-card" id="btnRoulette" type="button">
+          <span class="choice-icon">🎡</span>
+          <span><h3>Roulette de questions</h3><p>Une question tirée au sort pour t'inspirer si tu sèches.</p></span>
+        </button>
+      </div>
+
+      <div class="choice-summary hidden" id="choiceSummary">
+        <span id="choiceSummaryText">—</span>
+        <button class="link-small" id="btnChangeChoice" type="button">Changer</button>
+      </div>
+    </section>
+
+    <!-- ROULETTE -->
+    <section class="panel hidden" id="sec-roulette">
+      <h2>Tourne la roulette 🎡</h2>
+      <p class="hero-sub" style="margin-bottom:0;">Tu peux relancer jusqu'à trouver une question qui te plaît.</p>
+
+      <div class="wheel-wrap">
+        <div class="pointer"></div>
+        <div class="wheel" id="wheel"></div>
+      </div>
+
+      <div class="question-card" id="questionCard">
+        <p class="placeholder">Ta question apparaîtra ici ✨</p>
+      </div>
+
+      <div class="btn-row" style="margin-top:16px; justify-content:center;" id="spinRow">
+        <button class="btn btn-primary" id="btnSpin" type="button">🎲 Tourner la roulette</button>
+      </div>
+      <div class="btn-row hidden" style="margin-top:12px; justify-content:center;" id="rouletteResultActions">
+        <button class="btn btn-ghost" id="btnPrevQuestion" type="button" title="Revenir à la question précédente">⬅️ Question précédente</button>
+        <button class="btn btn-ghost" id="btnRespin" type="button">🔄 Autre question</button>
+        <button class="btn btn-primary" id="btnUseQuestion" type="button">🎬 Je choisis celle-ci</button>
+      </div>
+    </section>
+
+    <!-- ENREGISTREMENT -->
+    <section class="panel hidden" id="sec-record">
+      <h2 id="recordTitle">À toi de jouer 🎬</h2>
+      <p class="hero-sub" id="recordSub" style="margin-bottom:0;">Prends une grande respiration. Tu peux refaire autant de prises que nécessaire.</p>
+
+      <div class="cam-frame" id="camFrame">
+        <video id="liveVideo" autoplay muted playsinline></video>
+        <canvas id="stageCanvas"></canvas>
+        <video id="playback" playsinline controls></video>
+        <div class="rec-badge" id="recBadge"><span class="rec-dot"></span>REC</div>
+        <div class="cam-overlay-note" id="camOverlayNote">
+          <b>Mimie Doudou · 40 ans</b>
+          <span id="overlayQuestionText">Message libre</span>
+        </div>
+      </div>
+
+      <div class="timer hidden" id="timer">00:00</div>
+
+      <!-- Saisie de l'auteur après enregistrement -->
+      <div class="author-card hidden" id="authorCard">
+        <label for="authorName">C'est signé de la part de qui ? ✨</label>
+        <input type="text" id="authorName" class="author-input" placeholder="Ton prénom (ex: Sarah, Julien, La bande de Pau…)" maxlength="40">
+        <span class="author-help" id="authorHelp">Indique ton prénom pour activer l'envoi.</span>
+      </div>
+
+      <div id="camControls" class="btn-row" style="justify-content:center;">
+        <button class="btn btn-primary" id="btnRecord" type="button">⏺ Démarrer l'enregistrement</button>
+      </div>
+      <div id="camControlsRecording" class="btn-row hidden" style="justify-content:center;">
+        <button class="btn btn-ghost" id="btnStop" type="button">⏹ Arrêter</button>
+      </div>
+      <div id="camControlsDone" class="btn-row hidden" style="justify-content:center;">
+        <button class="btn btn-ghost" id="btnRetake" type="button">↺ Refaire</button>
+        <button class="btn btn-primary" id="btnToSend" type="button" disabled>Continuer →</button>
+      </div>
+    </section>
+
+    <!-- ENVOI -->
+    <section class="panel hidden" id="sec-send">
+      <h2 id="sendTitle">Envoi de ta vidéo… 🎁</h2>
+      <p class="hero-sub" id="sendSub">Ne quitte pas cette page pendant l'envoi, ça ne prend que quelques secondes.</p>
+
+      <div class="upload-progress-wrap" id="uploadProgressWrap">
+        <div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadProgressFill"></div></div>
+        <div class="upload-progress-text" id="uploadProgressText">0 %</div>
+      </div>
+
+      <div class="hidden" id="uploadSuccess">
+        <div class="note-box" style="border-color: var(--sage-soft); background:#f3f8f6;">
+          ✅ Vidéo bien reçue, merci infiniment !
+        </div>
+      </div>
+
+      <div class="hidden" id="uploadError">
+        <div class="note-box">
+          L'envoi automatique a échoué. Pas de panique : télécharge ta vidéo et envoie-la par WhatsApp ou Mail à l'organisateur, ou réessaie l'envoi.
+        </div>
+        <div class="btn-row" style="margin-top:12px; flex-direction:column; align-items:stretch; gap:10px;">
+          <button class="btn btn-primary btn-block" id="btnRetryUpload" type="button">🔄 Réessayer l'envoi</button>
+          <a class="btn btn-ghost btn-block" id="btnDownload" download>⬇️ Télécharger ma vidéo</a>
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top:20px;">
+        <button class="btn btn-ghost" id="btnAnother" type="button">🎬 Enregistrer un autre message</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="credit">Fait avec 🧡 pour les 40 ans de Mimie Doudou</footer>
+</div>
+
+<!-- FIREBASE STORAGE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+  import { getStorage, ref, uploadBytesResumable } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBzYjLHqEAjPIbwdRufpjx9KZocgesQQDw",
+    authDomain: "message-video-mimie-doudou.firebaseapp.com",
+    projectId: "message-video-mimie-doudou",
+    storageBucket: "message-video-mimie-doudou.firebasestorage.app",
+    messagingSenderId: "251932635369",
+    appId: "1:251932635369:web:ba8d1e20264d37ce1ec078"
+  };
+
+  const STORAGE_FOLDER = "mimie40-videos";
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const storage = getStorage(app);
+
+  const authReady = signInAnonymously(auth).catch((err) => {
+    console.error("Erreur de connexion anonyme Firebase :", err);
+  });
+
+  window.startFirebaseUpload = async function(blob, filename, metadata, { onProgress, onSuccess, onError } = {}){
+    try{
+      await authReady;
+      const fileRef = ref(storage, `${STORAGE_FOLDER}/${filename}`);
+      
+      const uploadTask = uploadBytesResumable(fileRef, blob, {
+        contentType: blob.type || "video/webm",
+        customMetadata: metadata
+      });
+
+      uploadTask.on("state_changed",
+        (snapshot) => {
+          const pct = snapshot.totalBytes ? Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100) : 0;
+          if(onProgress) onProgress(pct);
+        },
+        (error) => {
+          console.error("Erreur d'envoi Firebase :", error);
+          if(onError) onError(error);
+        },
+        () => {
+          if(onSuccess) onSuccess();
+        }
+      );
+    }catch(err){
+      console.error("Erreur Firebase :", err);
+      if(onError) onError(err);
+    }
+  };
+</script>
+
+<script>
+window.addEventListener("DOMContentLoaded", function(){
+  "use strict";
+
+  const CONFIG = {
+    eventLabel: "Mimie Doudou · 40 ans",
+    maxRecordSeconds: 180
+  };
+
+  const QUESTIONS = [
+    "Quel est ton meilleur souvenir avec Mimie ?",
+    "Une anecdote ou un secret drôle à son sujet…",
+    "La qualité de Mimie que tu admires le plus ?",
+    "Le moment où tu t'es dit : c'est vraiment une amie en or.",
+    "Mimie impressionne tout le monde quand elle…",
+    "Le défi qu'elle doit relever pour ses 40 ans !",
+    "Qu'est-ce que tu lui souhaites pour sa quarantaine ?",
+    "Ce que tu préfères chez elle.",
+    "Quelle est la chose la plus folle que tu aies faite avec elle ?",
+    "Quel souvenir vous fait encore rire aujourd'hui ?",
+    "Quel moment partagé avec elle tu n'oublieras jamais ?",
+    "Si tu devais la comparer à un personnage de film, lequel et pourquoi ?"
+  ];
+
+  const state = {
+    mode: null, question: null, lastQuestionIndex: -1,
+    questionHistory: [],
+    stream: null, recorder: null, chunks: [], blob: null,
+    timerId: null, seconds: 0, author: ""
+  };
+
+  function reveal(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.classList.remove("hidden");
+    try { el.scrollIntoView({behavior:"smooth", block:"start"}); } catch(e){}
+  }
+  function hideEl(id){
+    const el = document.getElementById(id);
+    if(el) el.classList.add("hidden");
+  }
+
+  /* Choix */
+  function selectMode(mode){
+    state.mode = mode;
+    hideEl("choiceCards");
+    reveal("choiceSummary");
+    document.getElementById("choiceSummaryText").textContent =
+      mode === "free" ? "Format choisi : 💌 Message libre" : "Format choisi : 🎡 Roulette";
+
+    if(mode === "free"){
+      state.question = "Message libre";
+      hideEl("sec-roulette");
+      document.getElementById("recordTitle").textContent = "À toi de jouer 🎬";
+      document.getElementById("overlayQuestionText").textContent = "Message libre";
+      startRecordFlow();
+    } else {
+      resetWheel();
+      reveal("sec-roulette");
+      hideEl("sec-record"); hideEl("sec-send");
+    }
+  }
+
+  document.getElementById("btnFree").addEventListener("click", ()=>selectMode("free"));
+  document.getElementById("btnRoulette").addEventListener("click", ()=>selectMode("roulette"));
+  document.getElementById("btnChangeChoice").addEventListener("click", ()=>{
+    reveal("choiceCards");
+    hideEl("choiceSummary");
+    hideEl("sec-roulette"); hideEl("sec-record"); hideEl("sec-send");
+    stopStream();
+  });
+
+  /* Roulette & Historique questions */
+  const wheelEl = document.getElementById("wheel");
+  const btnPrevQuestion = document.getElementById("btnPrevQuestion");
+  let wheelRotation = 0;
+
+  function updatePrevButtonState(){
+    if(state.questionHistory.length > 1){
+      btnPrevQuestion.disabled = false;
+      btnPrevQuestion.style.opacity = "1";
+    } else {
+      btnPrevQuestion.disabled = true;
+      btnPrevQuestion.style.opacity = "0.4";
+    }
+  }
+
+  function resetWheel(){
+    wheelRotation = 0;
+    state.questionHistory = [];
+    wheelEl.style.transition = "none";
+    wheelEl.style.transform = "rotate(0deg)";
+    document.getElementById("questionCard").innerHTML = '<p class="placeholder">Ta question apparaîtra ici ✨</p>';
+    hideEl("rouletteResultActions");
+    reveal("spinRow");
+    updatePrevButtonState();
+    requestAnimationFrame(()=>{ wheelEl.style.transition = ""; });
+  }
+
+  function spinWheel(){
+    let index = Math.floor(Math.random()*QUESTIONS.length);
+    if(QUESTIONS.length > 1 && index === state.lastQuestionIndex){
+      index = (index + 1) % QUESTIONS.length;
+    }
+    state.lastQuestionIndex = index;
+
+    const segment = 360 / QUESTIONS.length;
+    const targetWithinTurn = 360 - (index*segment + segment/2);
+    wheelRotation += 1800 + ((targetWithinTurn - (wheelRotation % 360)) + 360) % 360;
+
+    document.getElementById("btnSpin").disabled = true;
+    document.getElementById("btnRespin").disabled = true;
+    btnPrevQuestion.disabled = true;
+    wheelEl.style.transform = `rotate(${wheelRotation}deg)`;
+
+    wheelEl.addEventListener("transitionend", function handler(){
+      wheelEl.removeEventListener("transitionend", handler);
+      state.question = QUESTIONS[index];
+      state.questionHistory.push({ index: index, rotation: wheelRotation, text: state.question });
+
+      document.getElementById("questionCard").innerHTML = `<p>${state.question}</p>`;
+      document.getElementById("btnSpin").disabled = false;
+      document.getElementById("btnRespin").disabled = false;
+      hideEl("spinRow");
+      reveal("rouletteResultActions");
+      updatePrevButtonState();
+    }, {once:true});
+  }
+
+  /* Retour en arrière sur la question précédente */
+  function goToPrevQuestion(){
+    if(state.questionHistory.length <= 1) return;
+    state.questionHistory.pop(); // Retire la question actuelle
+    const previous = state.questionHistory[state.questionHistory.length - 1];
+    state.lastQuestionIndex = previous.index;
+    state.question = previous.text;
+    wheelRotation = previous.rotation;
+
+    wheelEl.style.transition = "transform 0.4s ease-out";
+    wheelEl.style.transform = `rotate(${wheelRotation}deg)`;
+    document.getElementById("questionCard").innerHTML = `<p>${state.question}</p>`;
+    updatePrevButtonState();
+  }
+
+  document.getElementById("btnSpin").addEventListener("click", spinWheel);
+  document.getElementById("btnRespin").addEventListener("click", spinWheel);
+  btnPrevQuestion.addEventListener("click", goToPrevQuestion);
+  document.getElementById("btnUseQuestion").addEventListener("click", ()=>{
+    document.getElementById("recordTitle").textContent = "Réponds à ta question 🎬";
+    document.getElementById("overlayQuestionText").textContent = state.question;
+    startRecordFlow();
+  });
+
+  /* Caméra */
+  const liveVideo = document.getElementById("liveVideo");
+  const playback = document.getElementById("playback");
+  const stageCanvas = document.getElementById("stageCanvas");
+  const camFrame = document.getElementById("camFrame");
+  const authorInput = document.getElementById("authorName");
+  const authorHelp = document.getElementById("authorHelp");
+  const btnToSend = document.getElementById("btnToSend");
+  let ctx, drawLoopId;
+
+  function startRecordFlow(){
+    hideEl("sec-send");
+    reveal("sec-record");
+    setupCamera();
+  }
+
+  async function setupCamera(){
+    playback.style.display = "none";
+    liveVideo.style.display = "block";
+    hideEl("camControlsDone");
+    hideEl("camControlsRecording");
+    hideEl("authorCard");
+    reveal("camControls");
+    document.getElementById("btnRecord").disabled = false;
+    state.blob = null;
+    state.chunks = [];
+
+    const existingMsg = camFrame.querySelector(".cam-msg");
+    if(existingMsg) existingMsg.remove();
+
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      showCamError("L'accès caméra nécessite HTTPS (ou un hébergement en ligne comme Netlify). En local, ouvre via un serveur de test.");
+      return;
+    }
+
+    try{
+      state.stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: "user" },
+          width: { ideal: 720 },
+          height: { ideal: 960 }
+        },
+        audio: true
+      });
+    }catch(err){
+      showCamError("Impossible d'accéder à la caméra. Vérifie les autorisations de ton navigateur ou déploie sur Netlify (HTTPS obligatoire).");
+      return;
+    }
+
+    liveVideo.srcObject = state.stream;
+    try { await liveVideo.play(); } catch(e){}
+    stageCanvas.width = liveVideo.videoWidth || 720;
+    stageCanvas.height = liveVideo.videoHeight || 960;
+    ctx = stageCanvas.getContext("2d");
+    drawFrame();
+  }
+
+  function showCamError(txt){
+    const msg = document.createElement("div");
+    msg.className = "cam-msg";
+    msg.textContent = txt;
+    camFrame.appendChild(msg);
+    hideEl("camControls");
+  }
+
+  function drawFrame(){
+    if(!ctx) return;
+    const w = stageCanvas.width, h = stageCanvas.height;
+    
+    ctx.save();
+    ctx.translate(w, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(liveVideo, 0, 0, w, h);
+    ctx.restore();
+
+    // Habillage vidéo
+    const barH = h * 0.22;
+    const grad = ctx.createLinearGradient(0, h-barH, 0, h);
+    grad.addColorStop(0, "rgba(248, 246, 240, 0)");
+    grad.addColorStop(0.3, "rgba(248, 246, 240, 0.85)");
+    grad.addColorStop(1, "rgba(248, 246, 240, 0.98)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, h-barH, w, barH);
+
+    ctx.fillStyle = "#d97762";
+    ctx.font = `bold ${Math.round(h*0.026)}px Georgia, serif`;
+    ctx.fillText(CONFIG.eventLabel, w*0.05, h-barH + h*0.05);
+
+    const qText = (state.mode === "roulette" && state.question) ? state.question : "Message libre";
+    ctx.fillStyle = "#2f2526";
+    ctx.font = `600 ${Math.round(h*0.03)}px sans-serif`;
+    
+    const words = qText.split(" ");
+    let line = "", y = h-barH + h*0.1;
+    for(let n = 0; n < words.length; n++){
+      let testLine = line + words[n] + " ";
+      if(ctx.measureText(testLine).width > w*0.9 && n > 0){
+        ctx.fillText(line, w*0.05, y);
+        line = words[n] + " ";
+        y += h*0.038;
+      } else { line = testLine; }
+    }
+    ctx.fillText(line, w*0.05, y);
+
+    drawLoopId = requestAnimationFrame(drawFrame);
+  }
+
+  document.getElementById("btnRecord").addEventListener("click", ()=>{
+    const canvasStream = stageCanvas.captureStream ? stageCanvas.captureStream(30) : liveVideo.captureStream(30);
+    const audioTracks = state.stream.getAudioTracks();
+    const combined = new MediaStream([...canvasStream.getVideoTracks(), ...audioTracks]);
+
+    let selectedMime = "video/webm";
+    if (typeof MediaRecorder !== "undefined") {
+      if (MediaRecorder.isTypeSupported("video/mp4")) {
+        selectedMime = "video/mp4";
+      } else if (MediaRecorder.isTypeSupported("video/webm;codecs=vp8,opus")) {
+        selectedMime = "video/webm;codecs=vp8,opus";
+      }
+    }
+
+    try {
+      state.recorder = new MediaRecorder(combined, { mimeType: selectedMime });
+    } catch(e) {
+      state.recorder = new MediaRecorder(combined);
+    }
+
+    state.chunks = [];
+    state.recorder.ondataavailable = e => { if(e.data && e.data.size > 0) state.chunks.push(e.data); };
+    state.recorder.onstop = onRecordingStop;
+    state.recorder.start();
+
+    state.seconds = 0;
+    reveal("timer");
+    document.getElementById("timer").textContent = "00:00";
+    document.getElementById("recBadge").classList.add("show");
+    hideEl("camControls");
+    reveal("camControlsRecording");
+
+    state.timerId = setInterval(()=>{
+      state.seconds++;
+      const m = String(Math.floor(state.seconds/60)).padStart(2,"0");
+      const s = String(state.seconds%60).padStart(2,"0");
+      document.getElementById("timer").textContent = `${m}:${s}`;
+      if(state.seconds >= CONFIG.maxRecordSeconds) stopRecording();
+    }, 1000);
+  });
+
+  function stopRecording(){
+    if(state.recorder && state.recorder.state === "recording") state.recorder.stop();
+    clearInterval(state.timerId);
+    document.getElementById("recBadge").classList.remove("show");
+  }
+  document.getElementById("btnStop").addEventListener("click", stopRecording);
+
+  function stopStream(){
+    if(drawLoopId) cancelAnimationFrame(drawLoopId);
+    drawLoopId = null; ctx = null;
+    if(state.stream){ state.stream.getTracks().forEach(t=>t.stop()); state.stream = null; }
+  }
+
+  function onRecordingStop(){
+    state.blob = new Blob(state.chunks, { type: state.recorder.mimeType || "video/webm" });
+    playback.src = URL.createObjectURL(state.blob);
+    liveVideo.style.display = "none";
+    playback.style.display = "block";
+    hideEl("timer");
+    hideEl("camControlsRecording");
+    reveal("authorCard");
+    reveal("camControlsDone");
+
+    const currentName = authorInput.value.trim();
+    if(currentName.length > 0){
+      state.author = currentName;
+      btnToSend.disabled = false;
+      authorHelp.classList.add("hidden");
+    } else {
+      btnToSend.disabled = true;
+      authorHelp.classList.remove("hidden");
+      authorInput.focus();
+    }
+    stopStream();
+  }
+
+  authorInput.addEventListener("input", () => {
+    state.author = authorInput.value.trim();
+    const isValid = state.author.length > 0;
+    btnToSend.disabled = !isValid;
+    if(isValid){
+      authorHelp.classList.add("hidden");
+    } else {
+      authorHelp.classList.remove("hidden");
+    }
+  });
+
+  document.getElementById("btnRetake").addEventListener("click", ()=>{
+    playback.pause();
+    liveVideo.style.display = "block";
+    playback.style.display = "none";
+    hideEl("camControlsDone");
+    hideEl("authorCard");
+    reveal("camControls");
+    setupCamera();
+  });
+
+  /* Envoi automatique Firebase */
+  function resetUploadUI(){
+    hideEl("uploadError");
+    hideEl("uploadSuccess");
+    reveal("uploadProgressWrap");
+    document.getElementById("uploadProgressFill").style.width = "0%";
+    document.getElementById("uploadProgressText").textContent = "0 %";
+    document.getElementById("sendTitle").textContent = "Envoi de ta vidéo… 🎁";
+    document.getElementById("sendSub").textContent = "Ne quitte pas cette page pendant l'envoi.";
+  }
+
+  function cleanString(str){
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+              .replace(/[^a-zA-Z0-9]/g, "-")
+              .replace(/-+/g, "-")
+              .replace(/^-|-$/g, "");
+  }
+
+  function uploadCurrentVideo(){
+    if(!state.blob || !window.startFirebaseUpload) return;
+    resetUploadUI();
+
+    const author = state.author || "Anonyme";
+    const theme = (state.mode === "roulette" && state.question) ? state.question : "Message libre";
+
+    const mime = (state.recorder && state.recorder.mimeType) || state.blob.type || "";
+    const ext = mime.includes("mp4") ? "mp4" : "webm";
+    
+    const safeTheme = cleanString(theme).slice(0, 30);
+    const safeAuthor = cleanString(author).slice(0, 30);
+    const filename = `${safeTheme}__${safeAuthor}__${Date.now()}.${ext}`;
+
+    document.getElementById("btnDownload").href = playback.src;
+    document.getElementById("btnDownload").download = filename;
+
+    window.startFirebaseUpload(
+      state.blob,
+      filename,
+      { author: author, theme: theme },
+      {
+        onProgress: (pct)=>{
+          document.getElementById("uploadProgressFill").style.width = pct + "%";
+          document.getElementById("uploadProgressText").textContent = pct + " %";
+        },
+        onSuccess: ()=>{
+          hideEl("uploadProgressWrap");
+          reveal("uploadSuccess");
+          document.getElementById("sendTitle").textContent = "Merci " + author + " ! 🎉";
+          document.getElementById("sendSub").textContent = "Ta vidéo a bien été envoyée dans l'album souvenir.";
+        },
+        onError: ()=>{
+          hideEl("uploadProgressWrap");
+          reveal("uploadError");
+          document.getElementById("sendTitle").textContent = "Petit souci d'envoi 🤔";
+          document.getElementById("sendSub").textContent = "";
+        }
+      }
+    );
+  }
+
+  btnToSend.addEventListener("click", ()=>{
+    reveal("sec-send");
+    uploadCurrentVideo();
+  });
+
+  document.getElementById("btnRetryUpload").addEventListener("click", uploadCurrentVideo);
+
+  document.getElementById("btnAnother").addEventListener("click", ()=>{
+    state.mode = null; state.question = null; state.author = "";
+    authorInput.value = "";
+    reveal("choiceCards");
+    hideEl("choiceSummary");
+    hideEl("sec-roulette"); hideEl("sec-record"); hideEl("sec-send");
+    document.getElementById("sec-choice").scrollIntoView({behavior:"smooth", block:"start"});
+  });
+});
+</script>
+</body>
+</html>
